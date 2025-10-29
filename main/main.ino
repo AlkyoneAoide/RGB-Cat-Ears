@@ -1,7 +1,10 @@
-#include <Adafruit_NeoPixel.h>
 #include <Wire.h>
+#include <Adafruit_NeoPixel.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
 
 #define LED_PIN_0 D0
 #define LED_PIN_1 D1
@@ -9,12 +12,31 @@
 #define LED_COUNT_1 22
 #define SEG_LEN 3
 
+#define BLE_SERVICE_UUID "49991c1e-9300-46d0-9981-f43b07781010"
+#define BLE_CHARACTERISTIC_UUID "a538cf14-2e71-4089-a2c4-ca0506b5f1fb"
+
 Adafruit_NeoPixel strip0(LED_COUNT_0, LED_PIN_0, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 Adafruit_MPU6050 mpu;
 
+BLECharacteristic* jsonCharacteristic = NULL;
+
 unsigned long lastMoveTime = 0;
 const unsigned long idleDelay = 5000;  // ms before entering idle
+
+class BLECallbacks: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* newCharacteristic) {
+    String newValue = newCharacteristic->getValue();
+
+    if (newValue.length() > 0) {
+      Serial.println("Got new value:");
+      for (int i = 0; i < newValue.length(); i++)
+        Serial.print(newValue[i]);
+      Serial.println();
+      Serial.println("Done.");
+    }
+  }
+};
 
 void setup() {
   Serial.begin(115200);
@@ -43,6 +65,21 @@ void setup() {
   strip1.begin();
   strip1.setBrightness(255);
   strip1.show();
+
+  // Setup device as BLE server
+  BLEDevice::init("RGB Cat Ears");
+  BLEServer* btServer = BLEDevice::createServer();
+  BLEService* btService = btServer->createService(BLE_SERVICE_UUID);
+
+  BLECharacteristic* btCharacteristic = btService->createCharacteristic(BLE_CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  btCharacteristic->setCallbacks(new BLECallbacks());
+  btCharacteristic->setValue("JSON stuff goes here...");
+  jsonCharacteristic = btCharacteristic;
+  
+  btService->start();
+
+  BLEAdvertising* btAdvertising = btServer->getAdvertising();
+  btAdvertising->start();
 }
 
 void loop() {
