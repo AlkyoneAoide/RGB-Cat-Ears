@@ -19,8 +19,6 @@ Adafruit_NeoPixel strip0(LED_COUNT_0, LED_PIN_0, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 Adafruit_MPU6050 mpu;
 
-BLECharacteristic* jsonCharacteristic = NULL;
-
 unsigned long lastMoveTime = 0;
 const unsigned long idleDelay = 5000;  // ms before entering idle
 
@@ -74,7 +72,6 @@ void setup() {
   BLECharacteristic* btCharacteristic = btService->createCharacteristic(BLE_CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
   btCharacteristic->setCallbacks(new BLECallbacks());
   btCharacteristic->setValue("JSON stuff goes here...");
-  jsonCharacteristic = btCharacteristic;
   
   btService->start();
 
