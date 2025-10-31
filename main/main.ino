@@ -1,10 +1,13 @@
-#include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
+#include <ArduinoJson.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
+#include <Wire.h>
+
+#include "default_effects.h"
 
 #define LED_PIN_0 D0
 #define LED_PIN_1 D1
@@ -20,6 +23,8 @@ Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 
 Adafruit_MPU6050 mpu;
 bool mpuFound = false;
+
+JsonDocument defaultEffect;
 
 unsigned long lastMoveTime = 0;
 const unsigned long idleDelay = 5000;  // ms before entering idle
@@ -45,7 +50,11 @@ void setup() {
   if (!mpu.begin()) {
     Serial.println("MPU6050 not found!");
     mpuFound = false;
-  } else { mpuFound = true; }
+    deserializeJson(defaultEffect, default_effects::DEFAULT_STATIC_JSON);
+  } else {
+    mpuFound = true;
+    deserializeJson(defaultEffect, default_effects::DEFAULT_GYRO_JSON);
+  }
 
   if (mpuFound) {
     Serial.println("Setting up MPU6050.");
@@ -99,6 +108,9 @@ void loop() {
     else gyroReactive(g);
   }
 }
+
+// TODO: handle switching to new effect, including defaults if not provided
+void updateEffect(String effectJson) {}
 
 // ---------------------- ACTIVE MODE ----------------------
 void gyroReactive(sensors_event_t &gyro) {
