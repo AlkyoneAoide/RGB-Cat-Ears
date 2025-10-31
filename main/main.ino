@@ -17,7 +17,9 @@
 
 Adafruit_NeoPixel strip0(LED_COUNT_0, LED_PIN_0, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
+
 Adafruit_MPU6050 mpu;
+bool mpuFound = false;
 
 unsigned long lastMoveTime = 0;
 const unsigned long idleDelay = 5000;  // ms before entering idle
@@ -42,20 +44,23 @@ void setup() {
   Wire.begin(6, 7);  // SDA, SCL for XIAO ESP32-C3
   if (!mpu.begin()) {
     Serial.println("MPU6050 not found!");
-    while (1) delay(10);
+    mpuFound = false;
+  } else { mpuFound = true; }
+
+  if (mpuFound) {
+    Serial.println("Setting up MPU6050.");
+    mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+    mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+    mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+
+    // Setup motion detection
+    mpu.setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
+    mpu.setMotionDetectionThreshold(10);  // threshold in milli gs
+    mpu.setMotionDetectionDuration(20);   // duration above threshold in ms
+    mpu.setInterruptPinLatch(true);       // Keep it latched.  Will turn off when reinitialized.
+    mpu.setInterruptPinPolarity(true);
+    mpu.setMotionInterrupt(true);
   }
-
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
-
-  // Setup motion detection
-  mpu.setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
-  mpu.setMotionDetectionThreshold(10);  // threshold in milli gs
-  mpu.setMotionDetectionDuration(20);   // duration above threshold in ms
-  mpu.setInterruptPinLatch(true);       // Keep it latched.  Will turn off when reinitialized.
-  mpu.setInterruptPinPolarity(true);
-  mpu.setMotionInterrupt(true);
 
   strip0.begin();
   strip0.setBrightness(255);
@@ -80,17 +85,19 @@ void setup() {
 }
 
 void loop() {
-  sensors_event_t a, g, t;
-  mpu.getEvent(&a, &g, &t);
+  if (mpuFound) {
+    sensors_event_t a, g, t;
+    mpu.getEvent(&a, &g, &t);
 
-  if (mpu.getMotionInterruptStatus()) {
-    lastMoveTime = millis();
-    mpu.setMotionInterrupt(true);
+    if (mpu.getMotionInterruptStatus()) {
+      lastMoveTime = millis();
+      mpu.setMotionInterrupt(true);
+    }
+
+    bool isIdle = (millis() - lastMoveTime) > idleDelay;  // must not move for idle delay to trigger idle
+    if (isIdle) rainbowBreathing(g);
+    else gyroReactive(g);
   }
-
-  bool isIdle = (millis() - lastMoveTime) > idleDelay;  // must not move for idle delay to trigger idle
-  if (isIdle) rainbowBreathing(g);
-  else gyroReactive(g);
 }
 
 // ---------------------- ACTIVE MODE ----------------------
