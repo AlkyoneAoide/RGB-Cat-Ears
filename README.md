@@ -20,4 +20,6 @@ This is just the workflow I personally use; feel free to adapt it.
 3. Install the following libraries:
     1. Adafruit MPU6050
     2. Adafruit NeoPixel
+    3. ArduinoJson
 4. Select the XIAO_ESP32C3 as the board in Arduino IDE.
+
