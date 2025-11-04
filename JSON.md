@@ -23,7 +23,7 @@ The speed of the chosen effect, 0-255, defaults to 128.
 ---
 
 ### `direction`: int
-The direction the effect travels in, given as an angle in degrees.  A negative angle will reverse the direction traveled.  Defaults to 0.
+The direction the effect travels in, given as an angle in degrees (-360 - 360).  A negative angle will reverse the direction traveled.  Defaults to 0.
 
 ---
 
@@ -37,18 +37,8 @@ Array of colors to be included in the effect.  If two arrays are provided, they 
 
 ---
 
-<!-- ### `singleStrip`: boolean                             TODO: USELESS?????
-Whether to treat the ears as a single LED strip, or divide the effect between the two ears.  Defaults to false. -->
-
----
-
 ### `audioHalfEar`: boolean
-In a similar vein to `singleStrip`, but divided further.  False if the audio visualizer should treat each ear independently, true if it should use half ears.  Defaults to false.
-
----
-
-<!-- ### `ignoreDirection`: boolean                         TODO: USELESS?????
-Treats the effect as along a 1d strip, rather than a 2d ear (strip vs wipe).  If true, direction=1 goes right and direction=-1 goes left, but it no longer represents an angle.  Defaults to false. -->
+False if the audio visualizer should treat each ear independently, true if it should use half ears.  Defaults to false.
 
 ---
 
@@ -58,22 +48,22 @@ Array of integers matching the structure of `colors`, representing how much of t
 ---
 
 ### `gyroFallback`: string
-The effect that the ears should display if the gyro sensor has not been sufficiently shaken in a while.  Defaults to static rainbow.
+The effect that the ears should display if the gyro sensor has not been sufficiently shaken in a while.  Defaults to rainbow.
+
+---
+
+### `gyroFallbackStyle`: string
+The style of the `gyroFallback` effect.  Defaults to static.
 
 ---
 
 ### `gyroSensitivity`: int
-How much force is needed to activate the gyro effects.  0-255, defaults to 64.
+How much force is needed to activate the gyro effects.  0-255, defaults to 10.
 
 ---
 
-### `gyroDelay`: int
+### `gyroTimeout`: int
 How long until the fallback effect should kick in, in miliseconds.  Defaults to 5000.
-
----
-
-### `gyroColors`: [strings] OR [[strings], [strings]]
-The colors for the gyro's effect, rather than the fallback effect.  Defaults to [["blue"], ["orange"]].
 
 ---
 
@@ -97,3 +87,4 @@ Specify the specific style of the selected effect that you want.
 - `panic` (display random colors from list)
 - `map` (axes of rotation map to r (roll), g (pitch), b (yaw))
 - `strength` (the stronger the force, the more lights come on) Default.
+
