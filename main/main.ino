@@ -7,7 +7,7 @@
 #include <BLEServer.h>
 #include <Wire.h>
 
-#include "default_effects.h"
+#include "led_effect.h"
 
 #define LED_PIN_0 D0
 #define LED_PIN_1 D1
@@ -24,7 +24,7 @@ Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 Adafruit_MPU6050 mpu;
 bool mpuFound = false;
 
-JsonDocument defaultEffect;
+JsonDocument effectJson;
 
 unsigned long lastMoveTime = 0;
 const unsigned long idleDelay = 5000;  // ms before entering idle
@@ -50,10 +50,10 @@ void setup() {
   if (!mpu.begin()) {
     Serial.println("MPU6050 not found!");
     mpuFound = false;
-    deserializeJson(defaultEffect, default_effects::DEFAULT_STATIC_JSON);
+    deserializeJson(effectJson, led_effect::DEFAULT_STATIC_JSON);
   } else {
     mpuFound = true;
-    deserializeJson(defaultEffect, default_effects::DEFAULT_GYRO_JSON);
+    deserializeJson(effectJson, led_effect::DEFAULT_GYRO_JSON);
   }
 
   if (mpuFound) {
@@ -66,8 +66,6 @@ void setup() {
     mpu.setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
     mpu.setMotionDetectionThreshold(10);  // threshold in milli gs
     mpu.setMotionDetectionDuration(20);   // duration above threshold in ms
-    mpu.setInterruptPinLatch(true);       // Keep it latched.  Will turn off when reinitialized.
-    mpu.setInterruptPinPolarity(true);
     mpu.setMotionInterrupt(true);
   }
 
@@ -100,7 +98,6 @@ void loop() {
 
     if (mpu.getMotionInterruptStatus()) {
       lastMoveTime = millis();
-      mpu.setMotionInterrupt(true);
     }
 
     bool isIdle = (millis() - lastMoveTime) > idleDelay;  // must not move for idle delay to trigger idle
