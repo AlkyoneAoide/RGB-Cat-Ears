@@ -1,0 +1,10 @@
+brightness
+speed
+randomOrder
+colors
+perEarColors
+gradientColorWidth
+strip0
+strip0_len
+strip1
+strip1_len

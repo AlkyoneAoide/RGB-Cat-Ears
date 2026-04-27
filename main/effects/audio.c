@@ -1,0 +1,11 @@
+brightness
+randomOrder
+colors
+perEarColors
+audioHalfEar
+gradientColorWidth
+style
+strip0
+strip0_len
+strip1
+strip1_len

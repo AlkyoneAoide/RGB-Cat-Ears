@@ -32,8 +32,14 @@ True if the color order should be randomized, false if not. Defaults to false.
 
 ---
 
-### `colors`: [strings] OR [[strings], [strings]]
-Array of colors to be included in the effect.  If two arrays are provided, they map to the two ears.  Defaults to [["blue"], ["orange"]]
+### `colors`: [int, (h, s, v)...] OR [[int, (h, s, v)...], [int, (h, s, v)...]]
+Array of colors to be included in the effect.  If two arrays are provided, they map to the two ears.  Defaults to [[1, 210, 100, 100], [1, 30, 100, 100]]
+(h: 0-355, s/v: 0-100)
+
+---
+
+### `perEarColors`: boolean
+True if the `colors` property is two arrays nested instead of one single array
 
 ---
 
@@ -42,8 +48,10 @@ False if the audio visualizer should treat each ear independently, true if it sh
 
 ---
 
-### `gradientColorWidth`: [ints] OR [[ints], [ints]]
+### `gradientColorWidth`: [int, int...] OR [[int, int...], [int, int...]]
 Array of integers matching the structure of `colors`, representing how much of the strip each color should take relative to the other colors available.  Defaults to even distribution.
+
+# TODO: figure out how to differentiate wanting gradients vs multiple colors in sequence (like breathing with blue+orange -> green+pink)
 
 ---
 
@@ -87,4 +95,3 @@ Specify the specific style of the selected effect that you want.
 - `panic` (display random colors from list)
 - `map` (axes of rotation map to r (roll), g (pitch), b (yaw))
 - `strength` (the stronger the force, the more lights come on) Default.
-
