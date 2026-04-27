@@ -13,8 +13,6 @@ The full CAD model and design are available on [Onshape](https://cad.onshape.com
 
 ## Development
 
-This is just the workflow I personally use; feel free to adapt it.
-
 1. Clone the repository.
 2. Open the Arduino IDE.
 3. Install the following libraries:

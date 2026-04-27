@@ -1,7 +1,7 @@
 # JSON LED configuration format
 
 ### `effect`: string
-Which effect to apply to the ears. Possible values:
+Which effect to apply to the ears.  Defaults to "static".  Possible values:
 - `audio` (app only probably)
 - `breathing`
 - `gradient`
@@ -9,11 +9,6 @@ Which effect to apply to the ears. Possible values:
 - `rainbow`
 - `stars`
 - `static`
-
----
-
-### `brightness`: int
-The brightness (or maximum brightness) of the LEDs. 0-255, defaults to 255.
 
 ---
 
@@ -33,8 +28,10 @@ True if the color order should be randomized, false if not. Defaults to false.
 ---
 
 ### `colors`: [int, (h, s, v)...] OR [[int, (h, s, v)...], [int, (h, s, v)...]]
-Array of colors to be included in the effect.  If two arrays are provided, they map to the two ears.  Defaults to [[1, 210, 100, 100], [1, 30, 100, 100]]
+Array of colors to be included in the effect.  If two arrays are provided, they map to the two ears.  Should only either include one color, or one color per pixel.  Defaults to [[1, hsv(210, 100, 100)], [1, hsv(30, 100, 100)]]
 (h: 0-355, s/v: 0-100)
+
+# TODO: figure out how to differentiate wanting gradients vs multiple colors in sequence (like breathing with blue+orange -> green+pink)
 
 ---
 
@@ -48,20 +45,13 @@ False if the audio visualizer should treat each ear independently, true if it sh
 
 ---
 
-### `gradientColorWidth`: [int, int...] OR [[int, int...], [int, int...]]
-Array of integers matching the structure of `colors`, representing how much of the strip each color should take relative to the other colors available.  Defaults to even distribution.
-
-# TODO: figure out how to differentiate wanting gradients vs multiple colors in sequence (like breathing with blue+orange -> green+pink)
-
----
-
-### `gyroFallback`: string
+### `gyroIdle`: string
 The effect that the ears should display if the gyro sensor has not been sufficiently shaken in a while.  Defaults to rainbow.
 
 ---
 
-### `gyroFallbackStyle`: string
-The style of the `gyroFallback` effect.  Defaults to static.
+### `gyroIdleStyle`: string
+The style of the `gyroIdle` effect.  Defaults to static.
 
 ---
 
@@ -84,6 +74,7 @@ Specify the specific style of the selected effect that you want.
 - `static` (static rainbow) Default.
 - `moving` (strip effect that moves side-to-side)
 - `wipe` (moving rainbow, direction depends on `direction`)
+- `gyro` (brightness depends on rotation rate)
 `gradient`
 - `static` (static gradient) Default.
 - `moving` (moves in a similar way to rainbow.movingStrip)
@@ -91,7 +82,6 @@ Specify the specific style of the selected effect that you want.
 - `volume` (use volume exclusively for visualizer)
 - `frequency` (use traditional frequency-based visualizer) Default.
 `gyro`
-- `static` (display color if sensed)
-- `panic` (display random colors from list)
+- `static` (brightness = force)
 - `map` (axes of rotation map to r (roll), g (pitch), b (yaw))
-- `strength` (the stronger the force, the more lights come on) Default.
+- `strength` (the stronger the force, the more lights come on, center of strip is maximum) Default.

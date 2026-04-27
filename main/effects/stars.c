@@ -1,9 +1,0 @@
-brightness
-speed
-randomOrder
-colors
-perEarColors
-strip0
-strip0_len
-strip1
-strip1_len
