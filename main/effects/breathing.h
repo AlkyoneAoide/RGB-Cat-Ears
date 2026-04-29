@@ -3,23 +3,23 @@
 #include <unordered_map>
 #include <Adafruit_NeoPixel.h>
 
-static const unordered_map<string, void (*)(LEDEffect, Adafruit_NeoPixel,
-	Adafruit_NeoPixel, sensors_event_t)> breathingEffectStyles = {
-	{"", breathingEffect}
+class BreathingEffect: public LEDEffect {
+    public:
+        BreathingEffect() : LEDEffect({
+            {"default", breathingEffect}
+        }, "default") {}
+    private:
+        // TODO
+        static void breathingEffect(LEDInfo info) {}
 }
 
-static void ledBreathing(LEDEffect chosenEffect, Adafruit_NeoPixel ledsLeft,
-    Adafruit_NeoPixel ledsRight, sensors_event_t _) {
-    // get func from map like in effects.h
-}
-
-brightness
-speed
-randomOrder
-colors
-perEarColors
-gradientColorWidth
-strip0
-strip0_len
-strip1
-strip1_len
+// brightness
+// speed
+// randomOrder
+// colors
+// perEarColors
+// gradientColorWidth
+// strip0
+// strip0_len
+// strip1
+// strip1_len

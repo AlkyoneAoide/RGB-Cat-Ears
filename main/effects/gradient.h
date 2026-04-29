@@ -3,26 +3,28 @@
 #include <unordered_map>
 #include <Adafruit_NeoPixel.h>
 
-static const unordered_map<string, void (*)(LEDEffect, Adafruit_NeoPixel,
-	Adafruit_NeoPixel, sensors_event_t)> gradientEffectStyles = {
-	{"static", gradientEffectStatic},
-	{"moving", gradientEffectMoving}
+class GradientEffect: public LEDEffect {
+	public:
+		GradientEffect() : LEDEffect({
+			{"static", gradientEffectStatic},
+			{"moving", gradientEffectMoving}
+		}, "static") {}
+	private:
+		// TODO
+		static void gradientEffectStatic(LEDInfo info) {}
+		// TODO
+		static void gradientEffectMoving(LEDInfo info) {}
 }
 
-static void ledGradient(LEDEffect chosenEffect, Adafruit_NeoPixel ledsLeft,
-    Adafruit_NeoPixel ledsRight, sensors_event_t _) {
-    // get func from map like in effects.h
-}
-
-brightness
-speed
-direction
-randomOrder
-colors
-perEarColors
-gradientColorWidth
-style
-strip0
-strip0_len
-strip1
-strip1_len
+// brightness
+// speed
+// direction
+// randomOrder
+// colors
+// perEarColors
+// gradientColorWidth
+// style
+// strip0
+// strip0_len
+// strip1
+// strip1_len

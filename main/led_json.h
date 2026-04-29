@@ -19,7 +19,7 @@ namespace led_json {
 		}
 	)jsonliteral";
 
-	class LEDEffect {
+	class LEDDefinition {
 		public:
 			String effect;
 			uint8_t speed;
@@ -36,7 +36,7 @@ namespace led_json {
 			uint16_t gyroTimeout;
 			String style;
 
-			LEDEffect(String effect = "static", uint8_t speed = 128, int16_t direction = 0,
+			LEDDefinition(String effect = "static", uint8_t speed = 128, int16_t direction = 0,
 					bool randomOrder = false, uint8_t numColorsLeft = 1, uint32_t* colorsLeft = NULL,
 					uint8_t numColorsRight = 1, uint32_t* colorsRight = NULL, bool audioHalfEar = false,
 					String gyroIdle = "rainbow", String gyroIdleStyle = "static", uint8_t gyroSensitivity = 10,

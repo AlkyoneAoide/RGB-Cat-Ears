@@ -30,7 +30,7 @@ bool gyroFound = false;
 uint32_t lastMoveTime = 0;
 
 JsonDocument effectJson = NULL;
-LEDEffect chosenEffect = NULL;
+LEDDefinition effectInfo = NULL;
 
 class BLECallbacks: public BLECharacteristicCallbacks {
 	void onWrite(BLECharacteristic* newCharacteristic) {
@@ -119,7 +119,7 @@ void setup() {
 // TODO: handle switching to new effect
 // **including defaults if not provided**
 void updateEffect(String newEffect) {
-	chosenEffect = LEDEffect(
+	effectInfo = LEDDefinition(
 		newEffect["effect"],
 		newEffect["speed"]
 	);
@@ -134,5 +134,5 @@ void loop() {
 		}
 	}
 
-	run(chosenEffect, strip0, strip1, gyro, lastMoveTime)
+	run(effectInfo, strip0, strip1, gyro, lastMoveTime)
 }

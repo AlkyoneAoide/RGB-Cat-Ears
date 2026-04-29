@@ -5,34 +5,34 @@
 
 static const unordered_map<string, LEDEffect> effectList = {
 	//TODO: make these classes
-	{"audio", ledAudio},
-	{"breathing", ledBreathing},
-	{"gradient", ledGradient},
-	{"gyro", ledGyro},
-	{"rainbow", ledRainbow},
-	{"stars", ledStars},
-	{"static", ledStatic},
+	{"audio", AudioEffect},
+	{"breathing", BreathingEffect},
+	{"gradient", GradientEffect},
+	{"gyro", GyroEffect},
+	{"rainbow", RainbowEffect},
+	{"stars", StarsEffect},
+	{"static", StaticEffect},
 }
 
 // given deserialised JSON, leds, gyro (nullable), and last move time,
 // select correct function and pass required info
 // TODO: update to use class methods now
-static void run(LEDEffect chosenEffect, Adafruit_NeoPixel ledsLeft,
+static void run(LEDDefinition effectInfo, Adafruit_NeoPixel ledsLeft,
 	Adafruit_NeoPixel ledsRight, sensors_event_t gyro, uint32_t lastMoveTime) {
-	void (*primaryEffect)(LEDEffect, Adafruit_NeoPixel, Adafruit_NeoPixel, sensors_event_t) = effectFunctions[chosenEffect.effect];
+	LEDEffect primaryEffect = effectList[effectInfo.effect];
 
 	// only care abt idling if primary effect is "gyro"
-	if (gyro != NULL && primaryEffect == effectFunctions["gyro"]) {
-		bool isIdle = (millis() - lastMoveTime) > chosenEffect.gyroTimeout; // must not move for idle delay to trigger idle
+	if (gyro != NULL && primaryEffect == effectList["gyro"]) {
+		bool isIdle = (millis() - lastMoveTime) > effectInfo.gyroTimeout; // must not move for idle delay to trigger idle
 		if (isIdle) {
-			// TODO: maybe create/reassign LEDEffect gyro stuff over main here
-			void (*idleEffect)(LEDEffect, Adafruit_NeoPixel, Adafruit_NeoPixel, sensors_event_t) = effectFunctions[chosenEffect.gyroIdle];
-			idleEffect(chosenEffect, ledsLeft, ledsRight, gyro);
+			// TODO: maybe create/reassign LEDDefinition gyro stuff over main here
+			LEDEffect idleEffect = effectList[effectInfo.gyroIdle];
+			idleEffect.show({effectInfo, ledsLeft, ledsRight, gyro});
 		} else {
-			primaryEffect(chosenEffect, ledsLeft, ledsRight, gyro);
+			primaryEffect.show({effectInfo, ledsLeft, ledsRight, gyro});
 		}
 	} else {
-		primaryEffect(chosenEffect, ledsLeft, ledsRight, gyro);
+		primaryEffect.show({effectInfo, ledsLeft, ledsRight, gyro});
 	}
 }
 

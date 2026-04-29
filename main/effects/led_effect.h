@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 struct {
-    LEDEffect chosenEffect;
+    LEDDefinition effectInfo;
     Adafruit_NeoPixel ledsLeft;
     Adafruit_NeoPixel ledsRight;
     sensors_event_t gyro;
@@ -19,7 +19,7 @@ static class LEDEffect {
         }
 
         static void show(LEDInfo info) {
-            EffectFunction fun = getStyle(info.chosenEffect.style);
+            EffectFunction fun = getStyleFunction(info.effectInfo.style);
             fun(info);
         }
 
@@ -30,8 +30,8 @@ static class LEDEffect {
         unordered_map<string, EffectFunction> styles;
         string defaultStyle;
 
-        static void (*)(LEDEffect, Adafruit_NeoPixel,
-	    Adafruit_NeoPixel, sensors_event_t) getStyle(string style) {
+        static void (*)(LEDDefinition, Adafruit_NeoPixel,
+	    Adafruit_NeoPixel, sensors_event_t) getStyleFunction(string style) {
             if (styles.count(style) == 1) {
                 return styles[style];
             } else {
