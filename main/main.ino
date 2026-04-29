@@ -121,6 +121,7 @@ void setup() {
 void updateEffect(String newEffect) {
 	effectInfo = LEDDefinition(
 		newEffect["effect"],
+		//...
 		newEffect["speed"]
 	);
 }

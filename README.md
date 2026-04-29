@@ -21,3 +21,8 @@ The full CAD model and design are available on [Onshape](https://cad.onshape.com
     3. ArduinoJson
 4. Select the XIAO_ESP32C3 as the board in Arduino IDE.
 
+## Adding LED Effects
+
+1. Create a new header file under `effects`, containing a class for your effect
+2. Extend LEDEffect and define possible styles (and their corresponding functions) in its constructor call
+3. Add your new class (and its alias) to the map in `effect_utilities.h` :thumbsup:

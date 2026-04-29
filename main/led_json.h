@@ -37,10 +37,10 @@ namespace led_json {
 			String style;
 
 			LEDDefinition(String effect = "static", uint8_t speed = 128, int16_t direction = 0,
-					bool randomOrder = false, uint8_t numColorsLeft = 1, uint32_t* colorsLeft = NULL,
-					uint8_t numColorsRight = 1, uint32_t* colorsRight = NULL, bool audioHalfEar = false,
-					String gyroIdle = "rainbow", String gyroIdleStyle = "static", uint8_t gyroSensitivity = 10,
-					uint16_t gyroTimeout = 5000, String style = "static") {
+			bool randomOrder = false, uint8_t numColorsLeft = 1, uint32_t* colorsLeft = NULL,
+			uint8_t numColorsRight = 1, uint32_t* colorsRight = NULL, bool audioHalfEar = false,
+			String gyroIdle = "rainbow", String gyroIdleStyle = "static", uint8_t gyroSensitivity = 10,
+			uint16_t gyroTimeout = 5000, String style = "static") {
 				this->effect = effect; // TODO: validate
 				this->speed = speed;
 				this->direction = (-360 <= direction <= 360) ? direction : 0;
